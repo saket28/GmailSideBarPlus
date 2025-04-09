@@ -14,5 +14,17 @@
   "icons": {
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
-  }
+  },
+  "web_accessible_resources": [{
+    "resources": [
+      "modules/config.js",
+      "modules/domUtils.js",
+      "modules/emailScanner.js",
+      "modules/eventHandlers.js",
+      "modules/main.js",
+      "modules/state.js",
+      "modules/utils.js"
+    ],
+    "matches": ["*://mail.google.com/*"]
+  }]
 }
