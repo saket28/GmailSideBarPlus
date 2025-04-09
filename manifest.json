@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "Gmail Sender Filter Sidebar",
+  "version": "1.0.0",
+  "description": "Adds a collapsible sidebar to Gmail showing unique sender filters",
+  "permissions": ["storage"],
+  "host_permissions": ["*://mail.google.com/*"],
+  "content_scripts": [{
+    "matches": ["*://mail.google.com/*"],
+    "css": ["styles.css"],
+    "js": ["content.js"],
+    "run_at": "document_idle"
+  }],
+  "icons": {
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}
