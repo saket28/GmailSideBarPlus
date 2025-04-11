@@ -1,4 +1,5 @@
 import * as config from './config.js';
+import { debounce } from './utils.js'; // Import debounce
 import { scanAndPopulateList } from './emailScanner.js';
 import { state } from './state.js'; // Import state
 
@@ -40,14 +41,59 @@ export function handlePanelClick(event) {
         if (filterType === 'sender') {
             const firstWord = target.dataset.firstWord;
             if (firstWord) {
-                console.log(`Gmail Sender Filter Sidebar: Filtering Inbox by first word "${firstWord}"`);
-                const searchTerm = `in:inbox from:${firstWord}`;
-                const searchHash = `#search/${encodeURIComponent(searchTerm)}`;
+                const currentHash = window.location.hash;
+                let baseQuery = '';
+
+                // Determine base query from current hash
+                if (currentHash.startsWith('#search/')) {                    
+                    baseQuery = decodeURIComponent(currentHash.substring(8)).replace(/\+from:\S+/i, '').trim(); // Remove existing 'from:' clause
+                } else if (currentHash.startsWith('#label/')) {
+                    const label = decodeURIComponent(currentHash.substring(7));
+                    baseQuery = `label:${label}`;
+                } else if (currentHash.startsWith('#category/')) {
+                    const category = decodeURIComponent(currentHash.substring(10));
+                    baseQuery = `category:${category}`;
+                } else if (currentHash === '#sent') {
+                    baseQuery = 'is:sent';
+                } else if (currentHash === '#starred') {
+                    baseQuery = 'is:starred';
+                } else if (currentHash === '#drafts') {
+                    baseQuery = 'is:drafts';
+                } else if (currentHash === '#important') {
+                    baseQuery = 'is:important';
+                } else if (currentHash === '#spam') {
+                    baseQuery = 'in:spam';
+                } else if (currentHash === '#trash') {
+                    baseQuery = 'in:trash';
+                } else if (currentHash === '#all') {
+                    baseQuery = 'in:all';
+                } else {
+                    // Default to inbox for other cases (#inbox, empty hash, etc.)
+                    baseQuery = 'in:inbox';
+                }
+
+                // Combine base query with the new 'from:' filter, adding a space only if baseQuery is not empty
+                let newSearchTerm = `${baseQuery} from:${firstWord}`;
+                console.log(`Gmail Sender Filter Sidebar: Applying filter: "${newSearchTerm}"`);
+
+                // Manually replace spaces with '+' for Gmail's hash format
+                const gmailEncodedSearchTerm = newSearchTerm.replace(/ /g, '+');
+                const searchHash = `#search/${gmailEncodedSearchTerm}`;
                 window.location.hash = searchHash;
+
             }
         } else if (filterType === 'clear') {
-            console.log("Gmail Sender Filter Sidebar: Clearing filter, going to Inbox.");
-            window.location.hash = '#inbox';
+            const currentHash = window.location.hash;
+            let baseQuery = '';
+            // Determine base query from current hash
+            if (currentHash.startsWith('#search/')) {
+                baseQuery = decodeURIComponent(currentHash.substring(8)).replace(/\+from:\S+/i, '').trim(); // Remove existing 'from:' clause
+            } 
+            // Manually replace spaces with '+' for Gmail's hash format
+            const gmailEncodedSearchTerm = baseQuery.replace(/ /g, '+');
+            const searchHash = `#search/${gmailEncodedSearchTerm}`;
+            window.location.hash = searchHash;
+            console.log("Gmail Sender Filter Sidebar: Clearing sender.");
         }
     }
 }
@@ -61,45 +107,96 @@ export function updateActiveFilterHighlight() {
     if (!list) return;
 
     const currentHash = window.location.hash;
-    let activeFilterName = null; // This should be the first word parsed from URL
-    let isInInboxSearch = false;
+    let activeSenderFilter = null; // Store the active 'from:' value if found in search hash
 
+    // Check if current view is a search and extract the 'from:' filter
     if (currentHash.startsWith('#search/')) {
         try {
-            let searchQuery = decodeURIComponent(currentHash.substring(8));
-            isInInboxSearch = /\bin:inbox\b/i.test(searchQuery);
-            // Match non-whitespace chars after from:
+            const searchQuery = decodeURIComponent(currentHash.substring(8));
+            // Match 'from:' filter regardless of other search terms
             const fromMatch = searchQuery.match(/from:(\S+)/i);
             if (fromMatch && fromMatch[1]) {
-                activeFilterName = fromMatch[1];
+                activeSenderFilter = fromMatch[1].replaceAll('+', ' '); // Manually replace spaces with '+' for Gmail's hash format
             }
         } catch (e) { console.error("Error parsing search hash:", e); }
     }
 
-    let activeFound = false;
-    list.querySelectorAll('li a').forEach(a => { // Use simpler selector
+    let activeSenderLinkFound = false; // Track if any sender link was highlighted
+    list.querySelectorAll('li a').forEach(a => {
         a.classList.remove(config.ACTIVE_FILTER_CLASS);
         const filterType = a.dataset.filterType;
 
         if (filterType === 'sender') {
-            const linkFirstWord = a.dataset.firstWord; // Read directly
-            // Highlight only if the first word matches AND it was an inbox search
-            if (activeFilterName && isInInboxSearch && linkFirstWord && linkFirstWord.toLowerCase() === activeFilterName.toLowerCase()) {
+            const linkFirstWord = a.dataset.firstWord;
+            // Highlight if a 'from:' filter exists in the URL and matches this link's sender
+            if (activeSenderFilter && linkFirstWord && linkFirstWord.toLowerCase() === activeSenderFilter.toLowerCase()) {
                 a.classList.add(config.ACTIVE_FILTER_CLASS);
-                activeFound = true;
-            }
-        } else if (filterType === 'clear') {
-            // Highlight "Show All" if in inbox/label view AND no specific inbox sender filter is active
-            if (!activeFilterName && (currentHash.startsWith('#inbox') || currentHash.startsWith('#label') || currentHash === '' || currentHash === '#')) {
-                 a.classList.add(config.ACTIVE_FILTER_CLASS);
-                 activeFound = true;
+                activeSenderLinkFound = true; // Mark that a sender link is active
             }
         }
+        // We handle the 'clear' link separately below
     });
 
-     // Ensure "Show All" is highlighted if effectively in inbox and no sender filter matches
-     if (!activeFound && (currentHash.startsWith('#inbox') || currentHash.startsWith('#label') || currentHash === '' || currentHash === '#')) {
-          const clearLink = list.querySelector('.clear-filter a');
-          if(clearLink) clearLink.classList.add(config.ACTIVE_FILTER_CLASS);
-     }
+    // Handle the "Show All" (clear filter) link highlighting
+    const clearLink = list.querySelector('.clear-filter a');
+    if (clearLink) {
+        // Highlight "Show All" if we are NOT in a search view OR if we ARE in a search view BUT there's no active sender filter applied
+        if (!currentHash.startsWith('#search/') || (currentHash.startsWith('#search/') && !activeSenderFilter)) {
+             // Only add if no specific sender link was highlighted already
+             if (!activeSenderLinkFound) {
+                 clearLink.classList.add(config.ACTIVE_FILTER_CLASS);
+             } else {
+                 clearLink.classList.remove(config.ACTIVE_FILTER_CLASS);
+             }
+        } else {
+            // If we are in a search view AND a sender filter IS active, "Show All" should not be active.
+            clearLink.classList.remove(config.ACTIVE_FILTER_CLASS);
+        }
+    }
+}
+
+
+// --- New Handler for Hash Changes ---
+
+// Debounced version of scanAndPopulateList for hash changes
+const debouncedScanForHashChange = debounce(() => {
+    console.log("Gmail Sender Filter Sidebar: Hash changed, triggering debounced scan.");
+    // Reset placeholder before scan
+    const list = document.getElementById(`${config.PANEL_ID}-list`);
+    if (list) {
+        let placeholderLi = list.querySelector('.placeholder');
+        if (placeholderLi) {
+            placeholderLi.textContent = 'Loading emails...';
+        }
+    }
+    // Use a small timeout to ensure the URL change is processed before scanning
+    setTimeout(scanAndPopulateList, 100);
+}, config.DEBOUNCE_DELAY_MS + 200); // Debounce to wait for Gmail to load content
+
+/**
+ * Handles the window.location.hash change event.
+ * Updates the active filter highlight and triggers a debounced email scan
+ * ONLY if the hash change represents navigating to a new folder/label/view
+ * (i.e., hash does NOT start with #search/), NOT when just applying a search filter.
+ */
+export function handleHashChange() {
+    const currentHash = window.location.hash;
+    console.log(`Gmail Sender Filter Sidebar: Hash change detected: ${currentHash}`);
+
+    // Determine if we should scan: Scan only if the hash does NOT start with #search/
+    // This covers navigating to #inbox, #label/..., #sent, etc.
+    const shouldScan = decodeURIComponent(currentHash).indexOf('from:') < 0;//!currentHash.startsWith('#search/');
+    console.log(`Gmail Sender Filter Sidebar: shouldScan evaluated to: ${shouldScan} for hash ${currentHash}`); // Detailed log
+
+    // Always update highlighting based on the new hash
+    updateActiveFilterHighlight();
+
+    // Trigger scan conditionally
+    if (shouldScan) {
+        console.log("Gmail Sender Filter Sidebar: Condition met (is primary view change), calling debouncedScanForHashChange."); // Detailed log
+        debouncedScanForHashChange();
+    } else {
+        // This case handles when a search filter is applied (e.g., clicking a sender)
+        console.log("Gmail Sender Filter Sidebar: Condition NOT met (is search filter change), skipping automatic rescan."); // Detailed log
+    }
 }

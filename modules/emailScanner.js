@@ -58,25 +58,27 @@ export function scanAndPopulateList() {
     placeholderLi.textContent = 'Scanning emails...';
 
 
-    const emailContainer = document.querySelector(config.EMAIL_CONTAINER_SELECTOR);
-    if (!emailContainer) {
+    const emailContainers = document.querySelectorAll(config.EMAIL_CONTAINER_SELECTOR);
+    if (!emailContainers || emailContainers.length === 0) {
         console.warn("Email container not found for scanning.");
         placeholderLi.textContent = 'Error: Email list not found.';
         return;
     }
-
-    // --- Use Set for unique first words ---
     uniqueSendersCache.clear(); // Clear cache before re-scan
-    const emailRows = emailContainer.querySelectorAll(config.EMAIL_ROW_SELECTOR);
+    emailContainers.forEach(emailContainer => {
+        // --- Use Set for unique first words ---
+        const emailRows = emailContainer.querySelectorAll(config.EMAIL_ROW_SELECTOR);
 
-    emailRows.forEach(row => {
-        const senderInfo = extractSenderFromRow(row);
-        if (senderInfo && senderInfo.name) {
-            const firstWord = senderInfo.name.split(' ')[0].trim();
-            if (firstWord) {
-                uniqueSendersCache.add(firstWord);
+        emailRows.forEach(row => {
+            const senderInfo = extractSenderFromRow(row);
+            if (senderInfo && senderInfo.name) {
+                const firstWord = senderInfo.name;//.split(/[^a-zA-Z0-9'*]+/)[0].trim();
+                if (firstWord &&
+                    ![...uniqueSendersCache].some(existing => existing.toLowerCase() === firstWord.toLowerCase())) {
+                    uniqueSendersCache.add(firstWord);
+                }
             }
-        }
+        });
     });
     // --- End of Set logic ---
 

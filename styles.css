@@ -1,8 +1,9 @@
 /* Configuration */
 :root {
   --panel-width: 200px;
-  --panel-collapsed-width: 40px;
-  /* Gmail CSS Variables (Examples - may need adjustment based on Gmail updates) */
+  --transition-timing: 0.2s ease-in-out;
+  
+  /* Light theme */
   --surface: #f5f5f5;
   --border: #e0e0e0;
   --on-surface-variant: #3c4043;
@@ -10,7 +11,8 @@
   --hover-on-surface: rgba(60, 64, 67, 0.08);
   --secondary-container: #d3e3fd;
   --on-secondary-container: #0b57d0;
-  /* Dark Mode Examples */
+  
+  /* Dark theme */
   --surface-dark: #202124;
   --border-dark: #5f6368;
   --on-surface-variant-dark: #bdc1c6;
@@ -18,59 +20,51 @@
   --hover-on-surface-dark: rgba(232, 234, 237, 0.08);
   --secondary-container-dark: #28354a;
   --on-secondary-container-dark: #a8c7fa;
+  
+  /* Current theme defaults */
+  --current-surface: var(--surface);
+  --current-border: var(--border);
+  --current-on-surface-variant: var(--on-surface-variant);
+  --current-on-surface: var(--on-surface);
+  --current-hover: var(--hover-on-surface);
+  --current-secondary-container: var(--secondary-container);
+  --current-on-secondary-container: var(--on-secondary-container);
+}
+
+[data-theme="dark"] {
+  --current-surface: var(--surface-dark);
+  --current-border: var(--border-dark);
+  --current-on-surface-variant: var(--on-surface-variant-dark);
+  --current-on-surface: var(--on-surface-dark);
+  --current-hover: var(--hover-on-surface-dark);
+  --current-secondary-container: var(--secondary-container-dark);
+  --current-on-secondary-container: var(--on-secondary-container-dark);
 }
 
 /* Panel Container - Light Mode Defaults */
 #dynamic-sender-filter-panel {
-    position: relative; order: -1; width: var(--panel-width);
+    position: relative; width: var(--panel-width);
     height: calc(100vh - 64px); /* Adjust based on header */
     background-color: var(--surface, #f5f5f5);
-    border-right: 1px solid var(--border, #e0e0e0);
     box-sizing: border-box; display: flex; flex-direction: column;
     transition: width 0.2s ease-in-out; flex-shrink: 0; overflow: hidden;
     font-family: 'Roboto', Arial, sans-serif;
+    border-left: 1px solid var(--border, #e0e0e0);
 }
 
 /* Panel Header */
 #dynamic-sender-filter-panel-header {
     display: flex; align-items: center; /* justify-content: space-between; */ /* Removed for button grouping */
-    padding: 12px 8px 12px 16px; border-bottom: 1px solid var(--border, #e0e0e0);
+    padding: 12px 8px 12px 16px; 
     flex-shrink: 0;
 }
 #dynamic-sender-filter-panel-header h3 {
-    margin: 0; font-size: 14px; font-weight: 500;
+    margin: 0; font-size: 16px; font-weight: 500;
     color: var(--on-surface-variant, #3c4043);
     white-space: nowrap; overflow: hidden;
     flex-grow: 1; /* Allow title to take space */
     margin-right: 8px; /* Space between title and buttons */
 }
-/* Toggle Button */
-#dynamic-sender-filter-panel-toggle {
-    background: none; border: none; padding: 4px; margin-left: 4px; /* Adjusted margin */ cursor: pointer;
-    color: var(--on-surface-variant, #5f6368); border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    width: 28px; height: 28px;
-}
-#dynamic-sender-filter-panel-toggle:hover {
-    background-color: var(--hover-on-surface, rgba(60, 64, 67, 0.08));
-}
-#dynamic-sender-filter-panel-toggle svg {
-     width: 20px; height: 20px; fill: currentColor; transition: transform 0.2s ease-in-out;
-}
-/* Refresh Button */
-#dynamic-sender-filter-panel-refresh {
-    background: none; border: none; padding: 4px; margin-left: 4px; /* Adjust margin as needed */
-    cursor: pointer; color: var(--on-surface-variant, #5f6368);
-    border-radius: 50%; display: flex; align-items: center; justify-content: center;
-    width: 28px; height: 28px; order: -1; /* Place before toggle button */
-}
-#dynamic-sender-filter-panel-refresh:hover {
-    background-color: var(--hover-on-surface, rgba(60, 64, 67, 0.08));
-}
-#dynamic-sender-filter-panel-refresh svg {
-     width: 20px; height: 20px; fill: currentColor;
-}
-
 
 /* Panel List Area */
 #dynamic-sender-filter-panel-list-container {
@@ -79,7 +73,7 @@
 #dynamic-sender-filter-panel-list { list-style: none; padding: 0; margin: 0; }
 #dynamic-sender-filter-panel-list li { margin: 0; }
 #dynamic-sender-filter-panel-list li a {
-    display: flex; align-items: center; padding: 6px 16px 6px 24px;
+    display: flex; align-items: center; padding: 6px 16px 6px 16px;
     text-decoration: none; color: var(--on-surface, #202124);
     border-radius: 0 16px 16px 0; margin-right: 8px; font-size: 14px;
     cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
@@ -95,61 +89,30 @@
 }
 #dynamic-sender-filter-panel-list .clear-filter a { font-weight: 500; }
 #dynamic-sender-filter-panel-list .placeholder {
-    padding: 8px 16px 8px 24px; color: var(--on-surface-variant, #5f6368);
+    padding: 8px 16px 8px 16px; color: var(--on-surface-variant, #5f6368);
     font-style: italic; font-size: 13px;
 }
 
 /* --- Dark Mode Overrides --- */
 /* These are examples, inspect Gmail's dark mode for exact variables/colors */
 #dynamic-sender-filter-panel.dark-theme {
-    background-color: var(--surface-dark, #202124);
-    border-right-color: var(--border-dark, #5f6368);
-}
-#dynamic-sender-filter-panel.dark-theme #dynamic-sender-filter-panel-header {
-    border-bottom-color: var(--border-dark, #5f6368);
+    background-color: #111;
+    border-left-color: #333;
 }
 #dynamic-sender-filter-panel.dark-theme #dynamic-sender-filter-panel-header h3 {
     color: var(--on-surface-variant-dark, #bdc1c6);
-}
-#dynamic-sender-filter-panel.dark-theme #dynamic-sender-filter-panel-toggle,
-#dynamic-sender-filter-panel.dark-theme #dynamic-sender-filter-panel-refresh { /* Apply to both buttons */
-    color: var(--on-surface-variant-dark, #9aa0a6);
-}
-#dynamic-sender-filter-panel.dark-theme #dynamic-sender-filter-panel-toggle:hover,
-#dynamic-sender-filter-panel.dark-theme #dynamic-sender-filter-panel-refresh:hover { /* Apply to both buttons */
-    background-color: var(--hover-on-surface-dark, rgba(232, 234, 237, 0.08));
 }
 #dynamic-sender-filter-panel.dark-theme #dynamic-sender-filter-panel-list li a {
     color: var(--on-surface-dark, #e8eaed);
 }
 #dynamic-sender-filter-panel.dark-theme #dynamic-sender-filter-panel-list li a:hover {
-    background-color: var(--hover-on-surface-dark, rgba(232, 234, 237, 0.08));
+    background-color: var(--hover-on-surface-dark, #333);
 }
 #dynamic-sender-filter-panel.dark-theme #dynamic-sender-filter-panel-list li a.sender-filter-active {
-    background-color: var(--secondary-container-dark, #28354a);
-    color: var(--on-secondary-container-dark, #a8c7fa);
+    background-color: #444;
+    color: #eee;
 }
 #dynamic-sender-filter-panel.dark-theme #dynamic-sender-filter-panel-list .placeholder {
     color: var(--on-surface-variant-dark, #9aa0a6);
 }
 /* --- End Dark Mode --- */
-
-
-/* Collapsed State */
-#dynamic-sender-filter-panel.collapsed { width: var(--panel-collapsed-width); }
-#dynamic-sender-filter-panel.collapsed #dynamic-sender-filter-panel-header h3 { display: none; }
-#dynamic-sender-filter-panel.collapsed #dynamic-sender-filter-panel-toggle svg { transform: rotate(180deg); }
-#dynamic-sender-filter-panel.collapsed #dynamic-sender-filter-panel-list-container { display: none; }
-#dynamic-sender-filter-panel.collapsed #dynamic-sender-filter-panel-refresh { display: none; } /* Hide refresh when collapsed */
-
-
-/* Content Shifting */
-.content-shifted-by-panel > .aeN { /* Using the specific selector from the script */
-     margin-left: var(--panel-width) !important;
-     transition: margin-left 0.2s ease-in-out;
-}
-#dynamic-sender-filter-panel.collapsed + .aeN, /* Direct sibling */
-.content-shifted-by-panel:has(#dynamic-sender-filter-panel.collapsed) > .aeN /* Parent contains collapsed panel */
-{
-     margin-left: var(--panel-collapsed-width) !important;
-}

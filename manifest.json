@@ -15,6 +15,10 @@
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
   },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  },
+  "minimum_chrome_version": "80",
   "web_accessible_resources": [{
     "resources": [
       "modules/config.js",
@@ -25,6 +29,7 @@
       "modules/state.js",
       "modules/utils.js"
     ],
-    "matches": ["*://mail.google.com/*"]
+    "matches": ["*://mail.google.com/*"],
+    "use_dynamic_url": false
   }]
 }

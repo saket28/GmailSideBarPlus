@@ -2,10 +2,9 @@ import * as config from './config.js';
 import { debounce } from './utils.js';
 import { injectPanel, detectAndApplyTheme } from './domUtils.js';
 import { scanAndPopulateList } from './emailScanner.js';
-import { updateActiveFilterHighlight } from './eventHandlers.js';
+// Import the consolidated hash change handler
+import { handleHashChange } from './eventHandlers.js';
 import { state } from './state.js';
-
-console.log("Gmail Sender Filter Sidebar: Script starting (modular)...");
 
 /** Performs the very first scan and sets up completion state. */
 function performInitialScanAndPopulate() {
@@ -70,10 +69,15 @@ function setupInitialObserver() {
         state.themeObserver.observe(document.body, { attributes: true, attributeFilter: ['class'] });
     }
 
-    // 3. Listener for Hash Changes (for highlighting - runs continuously)
+    // 3. Listener for Hash Changes (handles highlighting AND triggers scan - runs continuously)
     // Ensure listener is only added once
-    window.removeEventListener('hashchange', updateActiveFilterHighlight); // Remove previous if any
-    window.addEventListener('hashchange', updateActiveFilterHighlight);
+    window.removeEventListener('hashchange', handleHashChange); // Remove previous if any
+    window.addEventListener('hashchange', handleHashChange);
+    console.log("Gmail Sender Filter Sidebar: Added hashchange listener.");
+
+    // Initial call to handle the state when the page first loads
+    handleHashChange();
+
 
     return true; // Observer setup attempted
 }
@@ -110,5 +114,14 @@ function initializeSidebar() {
     }, config.CHECK_INTERVAL_MS);
 }
 
-// Start the initialization process
-initializeSidebar();
+// Start the initialization process with error handling
+try {
+    initializeSidebar();
+} catch (error) {
+    console.error(`Gmail Sender Filter Sidebar: Initialization failed - ${error.message}`);
+    // Try to display error to user
+    const errorDisplay = document.createElement('div');
+    errorDisplay.style.color = 'red';
+    errorDisplay.textContent = 'Sidebar initialization failed. Please reload the page.';
+    document.body.prepend(errorDisplay);
+}
