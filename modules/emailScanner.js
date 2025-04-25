@@ -72,7 +72,10 @@ export function scanAndPopulateList() {
         emailRows.forEach(row => {
             const senderInfo = extractSenderFromRow(row);
             if (senderInfo && senderInfo.name) {
-                const firstWord = senderInfo.name;//.split(/[^a-zA-Z0-9'*]+/)[0].trim();
+                const firstWord = senderInfo.name
+                    .replace(/\b\w+\.(?=\s|$)/g, '') // remove words ending in a period                
+                    .split(/.+[\.\(\@*]+/)[0]
+                    .trim();
                 if (firstWord &&
                     ![...uniqueSendersCache].some(existing => existing.toLowerCase() === firstWord.toLowerCase())) {
                     uniqueSendersCache.add(firstWord);

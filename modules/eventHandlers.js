@@ -42,38 +42,38 @@ export function handlePanelClick(event) {
             const firstWord = target.dataset.firstWord;
             if (firstWord) {
                 const currentHash = window.location.hash;
-                let baseQuery = '';
-
+                let baseQuery = '-in:trash';
+                //let baseQuery = '';
                 // Determine base query from current hash
-                if (currentHash.startsWith('#search/')) {                    
-                    baseQuery = decodeURIComponent(currentHash.substring(8)).replace(/\+from:\S+/i, '').trim(); // Remove existing 'from:' clause
-                } else if (currentHash.startsWith('#label/')) {
-                    const label = decodeURIComponent(currentHash.substring(7));
-                    baseQuery = `label:${label}`;
-                } else if (currentHash.startsWith('#category/')) {
-                    const category = decodeURIComponent(currentHash.substring(10));
-                    baseQuery = `category:${category}`;
-                } else if (currentHash === '#sent') {
-                    baseQuery = 'is:sent';
-                } else if (currentHash === '#starred') {
-                    baseQuery = 'is:starred';
-                } else if (currentHash === '#drafts') {
-                    baseQuery = 'is:drafts';
-                } else if (currentHash === '#important') {
-                    baseQuery = 'is:important';
-                } else if (currentHash === '#spam') {
-                    baseQuery = 'in:spam';
-                } else if (currentHash === '#trash') {
-                    baseQuery = 'in:trash';
-                } else if (currentHash === '#all') {
-                    baseQuery = 'in:all';
-                } else {
-                    // Default to inbox for other cases (#inbox, empty hash, etc.)
-                    baseQuery = 'in:inbox';
-                }
+                //if (currentHash.startsWith('#search/')) {                    
+                //    baseQuery = decodeURIComponent(currentHash.substring(8)).replace(/\+from:\S+/i, '').trim(); // Remove existing 'from:' clause
+                //} else if (currentHash.startsWith('#label/')) {
+                //    const label = decodeURIComponent(currentHash.substring(7));
+                //    baseQuery = `label:${label}`;
+                //} else if (currentHash.startsWith('#category/')) {
+                //    const category = decodeURIComponent(currentHash.substring(10));
+                //    baseQuery = `category:${category}`;
+                //} else if (currentHash === '#sent') {
+                //    baseQuery = 'is:sent';
+                //} else if (currentHash === '#starred') {
+                //    baseQuery = 'is:starred';
+                //} else if (currentHash === '#drafts') {
+                //    baseQuery = 'is:drafts';
+                //} else if (currentHash === '#important') {
+                //    baseQuery = 'is:important';
+                //} else if (currentHash === '#spam') {
+                //    baseQuery = 'in:spam';
+                //} else if (currentHash === '#trash') {
+                //    baseQuery = 'in:trash';
+                //} else if (currentHash === '#all') {
+                //    baseQuery = 'in:all';
+                //} else {
+                //    // Default to inbox for other cases (#inbox, empty hash, etc.)
+                //    baseQuery = '-in:trash';
+                //}
 
                 // Combine base query with the new 'from:' filter, adding a space only if baseQuery is not empty
-                let newSearchTerm = `${baseQuery} from:${firstWord}`;
+                let newSearchTerm = `${baseQuery} from:(${firstWord})`;
                 console.log(`Gmail Sender Filter Sidebar: Applying filter: "${newSearchTerm}"`);
 
                 // Manually replace spaces with '+' for Gmail's hash format
@@ -114,7 +114,7 @@ export function updateActiveFilterHighlight() {
         try {
             const searchQuery = decodeURIComponent(currentHash.substring(8));
             // Match 'from:' filter regardless of other search terms
-            const fromMatch = searchQuery.match(/from:(\S+)/i);
+            const fromMatch = searchQuery.match(/from:\((\S+)\)/i);
             if (fromMatch && fromMatch[1]) {
                 activeSenderFilter = fromMatch[1].replaceAll('+', ' '); // Manually replace spaces with '+' for Gmail's hash format
             }
