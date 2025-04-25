@@ -36,6 +36,14 @@ export function extractSenderFromRow(rowElement) {
     return null;
 }
 
+function cleanName(name) {
+    return name
+      .replace(/\b\w+\.(?=\s|$)/g, '')           // Remove words ending in a period
+      .replace(/\s*[-–—]\s*$/, '')               // Remove trailing dash/hyphen
+      .split(/(?<=\w)[\.\(@]+/)[0]               // Split only after a word and before . ( @ or (
+      .trim();
+  }  
+
 /** Scans currently visible emails, extracts unique first words, populates the panel list. */
 export function scanAndPopulateList() {
     console.log("Gmail Sender Filter Sidebar: Scanning emails and populating list...");
@@ -72,10 +80,7 @@ export function scanAndPopulateList() {
         emailRows.forEach(row => {
             const senderInfo = extractSenderFromRow(row);
             if (senderInfo && senderInfo.name) {
-                const firstWord = senderInfo.name
-                    .replace(/\b\w+\.(?=\s|$)/g, '') // remove words ending in a period                
-                    .split(/.+[\.\(\@*]+/)[0]
-                    .trim();
+                const firstWord = cleanName(senderInfo.name);
                 if (firstWord &&
                     ![...uniqueSendersCache].some(existing => existing.toLowerCase() === firstWord.toLowerCase())) {
                     uniqueSendersCache.add(firstWord);
