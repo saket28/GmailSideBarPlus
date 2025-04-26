@@ -3,6 +3,5 @@ export const state = {
     panelInjected: false,
     initialScanComplete: false,
     themeApplied: false,
-    emailContainerObserver: null,
-    themeObserver: null,
+    emailContainerObserver: null
 };

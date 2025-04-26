@@ -37,21 +37,13 @@ export function extractSenderFromRow(rowElement) {
     return null;
 }
 
-//export function cleanName(name) {
-//    // Implementation of cleanName function
-//    if (!name || typeof name !== 'string') return '';
-//    name = name.trim();
-//    const match = name.match(/^[^\s-]+/);
-//    return match ? match[0] : '';
-//}
-
 export function cleanName(name) {
     if (!name || typeof name !== 'string') return '';
     return name
-        //.trim()
-        //.replace(/\b\w+\.(?=\s|$)/g, '')           // Remove words ending in a period
-        //.replace(/[\s]*[-–—.!]+$/, '')              // Remove trailing dashes/hyphens/periods
-        //.split(/(?<=\w)[\.\(@]+/)[0]               // Split only after a word and before . ( @ or (  
+        .replace(/[\p{L}\w]+\.(?=\s*$)/u, '')      // Remove words ending in a period
+        .replace(/[\s]*[^\p{L}\w]+$/u, '')         // Remove trailing special chars
+        .replace(/\s*\(.*$/, '')                   // Remove everything from first parenthesis
+        .replace(/(?!^)[\s]*[|@].*$/, '')          // Split on | or @ only if not at start
         .trim();
 }
 

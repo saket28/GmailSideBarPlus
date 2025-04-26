@@ -1,6 +1,6 @@
 import * as config from './config.js';
 import { debounce } from './utils.js';
-import { injectPanel, detectAndApplyTheme } from './domUtils.js';
+import { injectPanel } from './domUtils.js';
 import { scanAndPopulateList } from './emailScanner.js';
 import { handleHashChange } from './eventHandlers.js';
 import { state } from './state.js';
@@ -52,20 +52,6 @@ function setupInitialObserver() {
     if (document.querySelector(config.EMAIL_CONTAINER_SELECTOR)) {
          log("Email container already present on initial check.");
          debouncedInitialScan();
-    }
-
-    // 2. Observer for Theme Changes (runs continuously)
-    if (!state.themeObserver) {
-        log("Setting up theme observer on body attributes...");
-        state.themeObserver = new MutationObserver(mutations => {
-             for (const mutation of mutations) {
-                if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-                    detectAndApplyTheme();
-                    break;
-                }
-            }
-        });
-        state.themeObserver.observe(document.body, { attributes: true, attributeFilter: ['class'] });
     }
 
     // 3. Listener for Hash Changes (handles highlighting AND triggers scan - runs continuously)

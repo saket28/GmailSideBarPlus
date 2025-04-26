@@ -34,7 +34,10 @@ export function runTests({ test, assertStrictEqual }) {
             assertStrictEqual(cleanName('---'), '');
         }),
         test('custom tests', () => {
-            assertStrictEqual(cleanName('Deeplearning.AI'), 'Deeplearning'); 
+            assertStrictEqual(cleanName('Foo - Bar Do.'), 'Foo - Bar');
+            assertStrictEqual(cleanName('Capital One | Quick.'), 'Capital One'); 
+            assertStrictEqual(cleanName('Capital One .'), 'Capital One'); 
+            assertStrictEqual(cleanName('Deeplearning.AI'), 'Deeplearning.AI'); 
             assertStrictEqual(cleanName('Walmart Ex.'), 'Walmart');
             assertStrictEqual(cleanName('Bike Mart - Rich.'), 'Bike Mart');
             assertStrictEqual(cleanName('Foo (bar'), 'Foo');
