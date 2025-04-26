@@ -1,7 +1,7 @@
 // --- --- --- --- --- --- --- --- --- --- --- ---
 // --- CONFIGURATION & SELECTORS (ADJUST IF BROKEN!) ---
 // --- --- --- --- --- --- --- --- --- --- --- ---
-export const PANEL_ID = 'dynamic-sender-filter-panel'; // Use the ID from styles.css
+export const PANEL_ID = 'sender-panel'; // Use the ID from styles.css
 export const ACTIVE_FILTER_CLASS = 'sender-filter-active';
 export const DARK_THEME_CLASS = 'dark-theme'; // Class for dark mode styling
 

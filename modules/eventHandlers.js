@@ -4,36 +4,7 @@ import { scanAndPopulateList } from './emailScanner.js';
 import { state } from './state.js'; // Import state
 import { log } from './utils.js';
 
-/** Handles clicks on the refresh button. */
-export function handleRefreshClick(event) {
-    event.stopPropagation(); // Prevent panel click listener if needed
-    log("Refresh button clicked.");
-
-    // Visually reset the list immediately for feedback
-    const list = document.getElementById(`${config.PANEL_ID}-list`);
-    if (list) {
-        list.querySelectorAll('li:not(.clear-filter)').forEach(li => li.remove());
-        let placeholderLi = list.querySelector('.placeholder');
-        if (!placeholderLi) {
-            placeholderLi = document.createElement('li');
-            placeholderLi.className = 'placeholder';
-            list.appendChild(placeholderLi);
-        }
-        placeholderLi.textContent = 'Refreshing...';
-    }
-
-    // Call the core scanning logic directly
-    // Use a small timeout to allow the UI to update with "Refreshing..."
-    setTimeout(scanAndPopulateList, 50);
-}
-
-/** Handles clicks within the panel for filtering (filter links). */
 export function handlePanelClick(event) {
-    // Check if the click was on the refresh button - if so, do nothing here
-    if (event.target.closest(`#${config.PANEL_ID}-refresh`)) {
-        return;
-    }
-
     const target = event.target.closest('a'); // Find the nearest anchor link clicked
     if (target && target.closest(`#${config.PANEL_ID}`)) {
         event.preventDefault();
@@ -99,7 +70,6 @@ export function handlePanelClick(event) {
     }
 }
 
-/** Updates the active highlight based on the current URL hash (compares first words). */
 export function updateActiveFilterHighlight() {
     const panel = document.getElementById(config.PANEL_ID);
     // Wait until scan is complete AND panel is injected before highlighting
@@ -124,7 +94,7 @@ export function updateActiveFilterHighlight() {
         }
     }
 
-    let activeSenderLinkFound = false; // Track if any sender link was highlighted
+    let activeSenderLinkFound = false;
     list.querySelectorAll('li a').forEach(a => {
         a.classList.remove(config.ACTIVE_FILTER_CLASS);
         const filterType = a.dataset.filterType;
@@ -137,7 +107,6 @@ export function updateActiveFilterHighlight() {
                 activeSenderLinkFound = true; // Mark that a sender link is active
             }
         }
-        // We handle the 'clear' link separately below
     });
 
     // Handle the "Show All" (clear filter) link highlighting

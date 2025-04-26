@@ -8,7 +8,6 @@ export function detectAndApplyTheme() {
     if (state.themeApplied) return; // Only run once
     const panel = document.getElementById(config.PANEL_ID);
     if (!panel) return;
-    //const isDarkMode = document.body.classList.contains(config.GMAIL_DARK_MODE_INDICATOR);
     const el = document.querySelector('.aim a');
     if (!el) return; // Element not found
     const elColor = getComputedStyle(el).color;
@@ -23,12 +22,12 @@ export function detectAndApplyTheme() {
     log(`Theme set to ${isDarkMode ? 'Dark' : 'Light'}`);
 }
 
-/** Creates the panel structure (HTML), including the refresh button. */
+/** Creates the panel structure (HTML). */
 export function createPanelElement() {
     const panel = document.createElement('div');
     panel.id = config.PANEL_ID;
 
-    // Header (Title + Refresh + Toggle)
+    // Header
     const header = document.createElement('div');
     header.id = `${config.PANEL_ID}-header`;
     const title = document.createElement('h3');

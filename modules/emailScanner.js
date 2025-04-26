@@ -30,7 +30,6 @@ export function extractSenderFromRow(rowElement) {
         name = name.replace(/\s+/g, ' ').trim();
         if (!name) name = email || "Unknown Sender";
         if (name !== "Unknown Sender") {
-             // Return full name, we extract first word later
              return { name: name, email: email ? email.toLowerCase() : null };
         }
     }
