@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browser Test Runner</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mocha/10.2.0/mocha.min.css">
+</head>
+<body>
+    <div id="mocha"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mocha/10.2.0/mocha.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chai/4.3.7/chai.min.js"></script>
+
+    <script data-test-file="./tests/emailScanner.test.js"></script>
+
+    <script>
+        mocha.setup('bdd');
+        const { expect } = chai;
+
+        // Load the test runner and execute tests
+        import('./testRunner.js')
+            .then(({ loadAndRunTests }) => {
+                loadAndRunTests();
+            })
+            .catch(error => {
+                console.error('Failed to load testRunner.js:', error);
+                document.body.innerHTML += '<p style="color: red;">Failed to load test runner. Check the console for details.</p>';
+            });
+    </script>
+</body>
+</html>
