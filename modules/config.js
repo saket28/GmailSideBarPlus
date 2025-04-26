@@ -9,6 +9,9 @@ export const CHECK_INTERVAL_MS = 1000;
 export const MAX_CHECKS = 30;
 export const DEBOUNCE_DELAY_MS = 750; // Debounce for initial scan trigger
 
+// --- LOGGING ---
+export const ENABLE_LOGGING = true; // Set to false to disable all console logs
+
 // --- SELECTORS (VERY LIKELY TO NEED UPDATES - User Provided) ---
 // Parent element to inject the panel INTO. Should contain both the standard nav and main content.
 export const INJECTION_PARENT_SELECTOR = '.aqk'; // User provided - verify with Inspect Element!

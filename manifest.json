@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Gmail Sender Filter Sidebar",
+  "name": "Gmail Sender Sidebar",
   "version": "1.0.0",
   "description": "Adds a collapsible sidebar to Gmail showing unique sender filters",
   "permissions": ["storage"],
