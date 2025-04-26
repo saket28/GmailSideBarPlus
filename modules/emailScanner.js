@@ -1,5 +1,6 @@
 import * as config from './config.js';
 import { updateActiveFilterHighlight } from './eventHandlers.js'; // Will be created next
+import { log } from './utils.js';
 
 // --- Use a Set to store unique first words directly ---
 let uniqueSendersCache = new Set();
@@ -36,22 +37,32 @@ export function extractSenderFromRow(rowElement) {
     return null;
 }
 
-function cleanName(name) {
+//export function cleanName(name) {
+//    // Implementation of cleanName function
+//    if (!name || typeof name !== 'string') return '';
+//    name = name.trim();
+//    const match = name.match(/^[^\s-]+/);
+//    return match ? match[0] : '';
+//}
+
+export function cleanName(name) {
+    if (!name || typeof name !== 'string') return '';
     return name
-      .replace(/\b\w+\.(?=\s|$)/g, '')           // Remove words ending in a period
-      .replace(/\s*[-–—]\s*$/, '')               // Remove trailing dash/hyphen
-      .split(/(?<=\w)[\.\(@]+/)[0]               // Split only after a word and before . ( @ or (
-      .trim();
-  }  
+        //.trim()
+        //.replace(/\b\w+\.(?=\s|$)/g, '')           // Remove words ending in a period
+        //.replace(/[\s]*[-–—.!]+$/, '')              // Remove trailing dashes/hyphens/periods
+        //.split(/(?<=\w)[\.\(@]+/)[0]               // Split only after a word and before . ( @ or (  
+        .trim();
+}
 
 /** Scans currently visible emails, extracts unique first words, populates the panel list. */
 export function scanAndPopulateList() {
-    console.log("Gmail Sender Filter Sidebar: Scanning emails and populating list...");
+    log("Scanning emails and populating list...");
 
     const panel = document.getElementById(config.PANEL_ID);
     const list = document.getElementById(`${config.PANEL_ID}-list`);
     if (!panel || !list) {
-        console.error("Panel or list element not found during scan.");
+        log("Panel or list element not found during scan.", "error");
         return;
     }
 
@@ -67,8 +78,8 @@ export function scanAndPopulateList() {
 
 
     const emailContainers = document.querySelectorAll(config.EMAIL_CONTAINER_SELECTOR);
-    if (!emailContainers || emailContainers.length === 0) {
-        console.warn("Email container not found for scanning.");
+    if (!emailContainers || !emailContainers.length === 0) {
+        log("Email container not found for scanning.", "warn");
         placeholderLi.textContent = 'Error: Email list not found.';
         return;
     }
@@ -114,6 +125,6 @@ export function scanAndPopulateList() {
             list.appendChild(li);
         });
     }
-    console.log(`Gmail Sender Filter Sidebar: Scan complete. Found ${uniqueSendersCache.size} unique sender first words.`);
+    log(`Scan complete. Found ${uniqueSendersCache.size} unique sender first words.`);
     updateActiveFilterHighlight(); // Update highlight after list is populated
 }

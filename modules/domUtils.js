@@ -1,6 +1,7 @@
 import * as config from './config.js';
 import { handlePanelClick } from './eventHandlers.js'; // Import needed handlers
 import { state } from './state.js';
+import { log } from './utils.js';
 
 /** Detects Gmail theme and applies class to panel */
 export function detectAndApplyTheme() {
@@ -19,7 +20,7 @@ export function detectAndApplyTheme() {
         panel.classList.remove(config.DARK_THEME_CLASS);
     }
     state.themeApplied = true;
-    // console.log(`Gmail Sender Filter Sidebar: Theme set to ${isDarkMode ? 'Dark' : 'Light'}`);
+    log(`Theme set to ${isDarkMode ? 'Dark' : 'Light'}`);
 }
 
 /** Creates the panel structure (HTML), including the refresh button. */
@@ -71,14 +72,14 @@ export function injectPanel() {
     const referenceNode = parentContainer ? parentContainer.querySelector(config.INJECTION_REFERENCE_NODE_SELECTOR) : null;
 
     if (parentContainer && referenceNode) {
-         console.log("Gmail Sender Filter Sidebar: Found container and reference node, injecting panel...");
-         const panelElement = createPanelElement();
-         parentContainer.insertBefore(panelElement, referenceNode);
-         setTimeout(detectAndApplyTheme(), 100);
-         console.log("Gmail Sender Filter Sidebar: Panel structure injected.");
-         return true;
+        log("Found container and reference node, injecting panel...");
+        const panelElement = createPanelElement();
+        parentContainer.insertBefore(panelElement, referenceNode);
+        setTimeout(detectAndApplyTheme(), 100);
+        log("Panel structure injected.");
+        return true;
     } else {
-        console.log(`Gmail Sender Filter Sidebar: Could not find suitable injection point. Parent: ${parentContainer ? 'Found' : 'null'}, Reference: ${referenceNode ? 'Found' : 'null'}. Check INJECTION selectors.`);
+        log(`Could not find suitable injection point. Parent: ${parentContainer ? 'Found' : 'null'}, Reference: ${referenceNode ? 'Found' : 'null'}. Check INJECTION selectors.`, 'warn');
         return false;
     }
 }

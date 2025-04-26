@@ -2,11 +2,12 @@ import * as config from './config.js';
 import { debounce } from './utils.js'; // Import debounce
 import { scanAndPopulateList } from './emailScanner.js';
 import { state } from './state.js'; // Import state
+import { log } from './utils.js';
 
 /** Handles clicks on the refresh button. */
 export function handleRefreshClick(event) {
     event.stopPropagation(); // Prevent panel click listener if needed
-    console.log("Gmail Sender Filter Sidebar: Refresh button clicked.");
+    log("Refresh button clicked.");
 
     // Visually reset the list immediately for feedback
     const list = document.getElementById(`${config.PANEL_ID}-list`);
@@ -71,10 +72,10 @@ export function handlePanelClick(event) {
                 //    // Default to inbox for other cases (#inbox, empty hash, etc.)
                 //    baseQuery = '-in:trash';
                 //}
-
+                
                 // Combine base query with the new 'from:' filter, adding a space only if baseQuery is not empty
                 let newSearchTerm = `${baseQuery} from:(${firstWord})`;
-                console.log(`Gmail Sender Filter Sidebar: Applying filter: "${newSearchTerm}"`);
+                log(`Applying filter: "${newSearchTerm}"`);
 
                 // Manually replace spaces with '+' for Gmail's hash format
                 const gmailEncodedSearchTerm = newSearchTerm.replace(/ /g, '+');
@@ -93,7 +94,7 @@ export function handlePanelClick(event) {
             const gmailEncodedSearchTerm = baseQuery.replace(/ /g, '+');
             const searchHash = `#search/${gmailEncodedSearchTerm}`;
             window.location.hash = searchHash;
-            console.log("Gmail Sender Filter Sidebar: Clearing sender.");
+            log("Clearing sender.");
         }
     }
 }
@@ -118,7 +119,9 @@ export function updateActiveFilterHighlight() {
             if (fromMatch && fromMatch[1]) {
                 activeSenderFilter = fromMatch[1].replaceAll('+', ' '); // Manually replace spaces with '+' for Gmail's hash format
             }
-        } catch (e) { console.error("Error parsing search hash:", e); }
+        } catch (e) { 
+            log("Error parsing search hash: " + e, 'error'); 
+        }
     }
 
     let activeSenderLinkFound = false; // Track if any sender link was highlighted
@@ -160,7 +163,7 @@ export function updateActiveFilterHighlight() {
 
 // Debounced version of scanAndPopulateList for hash changes
 const debouncedScanForHashChange = debounce(() => {
-    console.log("Gmail Sender Filter Sidebar: Hash changed, triggering debounced scan.");
+    log("Hash changed, triggering debounced scan.");
     // Reset placeholder before scan
     const list = document.getElementById(`${config.PANEL_ID}-list`);
     if (list) {
@@ -181,22 +184,22 @@ const debouncedScanForHashChange = debounce(() => {
  */
 export function handleHashChange() {
     const currentHash = window.location.hash;
-    console.log(`Gmail Sender Filter Sidebar: Hash change detected: ${currentHash}`);
+    log(`Hash change detected: ${currentHash}`);
 
     // Determine if we should scan: Scan only if the hash does NOT start with #search/
     // This covers navigating to #inbox, #label/..., #sent, etc.
-    const shouldScan = decodeURIComponent(currentHash).indexOf('from:') < 0;//!currentHash.startsWith('#search/');
-    console.log(`Gmail Sender Filter Sidebar: shouldScan evaluated to: ${shouldScan} for hash ${currentHash}`); // Detailed log
+    const shouldScan = decodeURIComponent(currentHash).indexOf('from:') < 0;
+    log(`shouldScan evaluated to: ${shouldScan} for hash ${currentHash}`); // Detailed log
 
     // Always update highlighting based on the new hash
     updateActiveFilterHighlight();
 
     // Trigger scan conditionally
     if (shouldScan) {
-        console.log("Gmail Sender Filter Sidebar: Condition met (is primary view change), calling debouncedScanForHashChange."); // Detailed log
+        log("Condition met (is primary view change), calling debouncedScanForHashChange."); // Detailed log
         debouncedScanForHashChange();
     } else {
         // This case handles when a search filter is applied (e.g., clicking a sender)
-        console.log("Gmail Sender Filter Sidebar: Condition NOT met (is search filter change), skipping automatic rescan."); // Detailed log
+        log("Condition NOT met (is search filter change), skipping automatic rescan."); // Detailed log
     }
 }
