@@ -2,7 +2,7 @@ import * as config from './config.js';
 import { updateActiveFilterHighlight } from './eventHandlers.js'; // Will be created next
 import { log } from './utils.js';
 
-// --- Use a Set to store unique first words directly ---
+// Use a Set to store unique senders
 let uniqueSendersCache = new Set();
 
 /** Extracts sender name and email from a single email row element. */
@@ -46,7 +46,7 @@ export function cleanName(name) {
         .trim();
 }
 
-/** Scans currently visible emails, extracts unique first words, populates the panel list. */
+/** Scans currently visible emails, extracts unique senders, populates the panel list. */
 export function scanAndPopulateList() {
     log("Scanning emails and populating list...");
 
@@ -101,9 +101,9 @@ export function scanAndPopulateList() {
         noSendersLi.textContent = 'No senders found in view.';
         list.appendChild(noSendersLi);
     } else {
-        const sortedSenders = Array.from(uniqueSendersCache).sort((a, b) => {
-            return a.localeCompare(b, undefined, { sensitivity: 'base' });
-        });
+        const sortedSenders = Array.from(uniqueSendersCache)
+            .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }))
+            .slice(0, config.MAX_SENDERS);
 
         sortedSenders.forEach(firstWord => {
             const li = document.createElement('li');
@@ -116,6 +116,6 @@ export function scanAndPopulateList() {
             list.appendChild(li);
         });
     }
-    log(`Scan complete. Found ${uniqueSendersCache.size} unique sender first words.`);
+    log(`Scan complete. Found ${uniqueSendersCache.size} unique sender first words (showing up to ${config.MAX_SENDERS}).`);
     updateActiveFilterHighlight(); // Update highlight after list is populated
 }

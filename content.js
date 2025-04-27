@@ -1,7 +1,7 @@
 'use strict';
 
 (function() {
-    console.log("[GSS]: Loader script running...");
+    console.log("GSS ⚙️ Loader script running...");
 
     function injectScript(filePath) {
         const script = document.createElement('script');
@@ -11,9 +11,9 @@
         const head = document.head || document.documentElement;
         if (head) {
             head.appendChild(script);
-            console.log(`[GSS]: Injected ${filePath} as module.`);
+            console.log(`GSS ⚙️ Injected ${filePath} as module.`);
         } else {
-            console.error("[GSS]: Could not find head or documentElement to inject script.");
+            console.error("GSS ⚙️ Could not find head or documentElement to inject script.");
         }
     }
 

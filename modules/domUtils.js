@@ -74,7 +74,7 @@ export function injectPanel() {
         log("Found container and reference node, injecting panel...");
         const panelElement = createPanelElement();
         parentContainer.insertBefore(panelElement, referenceNode);
-        setTimeout(detectAndApplyTheme(), 100);
+        detectAndApplyTheme();
         log("Panel structure injected.");
         return true;
     } else {

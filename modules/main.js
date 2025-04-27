@@ -69,34 +69,38 @@ function setupInitialObserver() {
 
 // --- INITIALIZATION ---
 function initializeSidebar() {
-    const checkInterval = setInterval(() => {
-        state.checkCounter++;
+    let frameId;
+    const MAX_TIME = config.CHECK_INTERVAL_MS * config.MAX_CHECKS;
+    const startTime = Date.now();
 
+    const checkLoop = () => {
         if (!state.panelInjected) {
-            state.panelInjected = injectPanel(); // Try to inject panel structure first
+            state.panelInjected = injectPanel();
         }
 
-        // Once panel structure is in, set up the observers if not already done
         if (state.panelInjected && !state.emailContainerObserver && !state.initialScanComplete) {
-             setupInitialObserver();
+            setupInitialObserver();
         }
 
-        // Timeout condition
-        if (state.initialScanComplete || state.checkCounter >= config.MAX_CHECKS) {
-            clearInterval(checkInterval);
+        // Check timeout condition
+        if (state.initialScanComplete || (Date.now() - startTime >= MAX_TIME)) {
             if (!state.initialScanComplete && state.panelInjected) {
-                 log("Timed out waiting for email list to appear for initial scan.", "error");
-                 const list = document.getElementById(`${config.PANEL_ID}-list`);
-                 const placeholder = list ? list.querySelector('.placeholder') : null;
-                 if (placeholder) placeholder.textContent = 'Error: Timeout finding emails.';
+                log("Timed out waiting for email list to appear for initial scan.", "error");
+                const list = document.getElementById(`${config.PANEL_ID}-list`);
+                const placeholder = list?.querySelector('.placeholder');
+                if (placeholder) placeholder.textContent = 'Error: Timeout finding emails.';
             } else if (!state.panelInjected) {
-                 log("Timed out waiting for Gmail UI. Panel not injected.", "error");
+                log("Timed out waiting for Gmail UI. Panel not injected.", "error");
             } else {
-                 log("Initialization check finished.");
-                 // Observers are now managed internally (email observer disconnects itself, theme observer persists)
+                log("Initialization check finished.");
             }
+            return;
         }
-    }, config.CHECK_INTERVAL_MS);
+
+        frameId = requestAnimationFrame(checkLoop);
+    };
+
+    checkLoop();
 }
 
 // Start the initialization process with error handling
