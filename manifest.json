@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Gmail Sender Sidebar",
+  "name": "GMessanger",
   "version": "1.0.0",
-  "description": "Adds a collapsible sidebar to Gmail showing unique sender filters",
+  "description": "Adds a sidebar to Gmail showing messanger style DMs (direct messages).",
   "permissions": ["storage"],
   "host_permissions": ["*://mail.google.com/*"],
   "content_scripts": [{

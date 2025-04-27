@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="1080" height="1080" viewBox="0 0 1080 1080" xml:space="preserve">
+<desc>Created with Fabric.js 5.2.4</desc>
+<defs>
+</defs>
+<g transform="matrix(1 0 0 1 540 540)" id="d511a742-6643-44d4-8a10-cae926f4fb76"  >
+<rect style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1; visibility: hidden;" vector-effect="non-scaling-stroke"  x="-540" y="-540" rx="0" ry="0" width="1080" height="1080" />
+</g>
+<g transform="matrix(1 0 0 1 540 540)" id="c5d8d3b3-1276-4444-adf4-cb5059934cb5"  >
+</g>
+<g transform="matrix(7.5 0 0 7.5 318.25 385)" clip-path="url(#CLIPPATH_3)"  >
+<clipPath id="CLIPPATH_3" >
+	<path transform="matrix(1 0 0 1 290 -7.5) translate(-352, -76)" id="clip0" d="M 0 0 L 704 0 L 704 152 L 0 152 z" stroke-linecap="round" />
+</clipPath>
+<path style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(66,133,244); fill-rule: nonzero; opacity: 1;" vector-effect="non-scaling-stroke"  transform=" translate(-62, -83.5)" d="M 58 108 L 72 108 L 72 74 L 52 59 L 52 102 C 52 105.315 54.685 108 58 108 z" stroke-linecap="round" />
+</g>
+<g transform="matrix(7.5 0 0 7.5 828.26 385)" clip-path="url(#CLIPPATH_4)"  >
+<clipPath id="CLIPPATH_4" >
+	<path transform="matrix(1 0 0 1 222 -7.5) translate(-352, -76)" id="clip0" d="M 0 0 L 704 0 L 704 152 L 0 152 z" stroke-linecap="round" />
+</clipPath>
+<path style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(52,168,83); fill-rule: nonzero; opacity: 1;" vector-effect="non-scaling-stroke"  transform=" translate(-130, -83.5)" d="M 120 108 L 134 108 C 137.315 108 140 105.315 140 102 L 140 59 L 120 74 L 120 108 z" stroke-linecap="round" />
+</g>
+<g transform="matrix(7.5 0 0 7.5 828.26 193.68)" clip-path="url(#CLIPPATH_5)"  >
+<clipPath id="CLIPPATH_5" >
+	<path transform="matrix(1 0 0 1 222 18.01) translate(-352, -76)" id="clip0" d="M 0 0 L 704 0 L 704 152 L 0 152 z" stroke-linecap="round" />
+</clipPath>
+<path style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(251,188,4); fill-rule: nonzero; opacity: 1;" vector-effect="non-scaling-stroke"  transform=" translate(-130, -57.99)" d="M 120 48 L 120 74 L 140 59 L 140 51 C 140 43.585 131.535 39.35 125.6 43.8 L 120 48 z" stroke-linecap="round" />
+</g>
+<g transform="matrix(7.5 0 0 7.5 573.26 283.74)" clip-path="url(#CLIPPATH_6)"  >
+<clipPath id="CLIPPATH_6" >
+	<path transform="matrix(1 0 0 1 256 6) translate(-352, -76)" id="clip0" d="M 0 0 L 704 0 L 704 152 L 0 152 z" stroke-linecap="round" />
+</clipPath>
+<path style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(234,67,53); fill-rule: evenodd; opacity: 1;" vector-effect="non-scaling-stroke"  transform=" translate(-96, -70)" d="M 72 74 L 72 48 L 96 66 L 120 48 L 120 74 L 96 92 L 72 74 z" stroke-linecap="round" />
+</g>
+<g transform="matrix(7.5 0 0 7.5 318.25 193.68)" clip-path="url(#CLIPPATH_7)"  >
+<clipPath id="CLIPPATH_7" >
+	<path transform="matrix(1 0 0 1 290 18.01) translate(-352, -76)" id="clip0" d="M 0 0 L 704 0 L 704 152 L 0 152 z" stroke-linecap="round" />
+</clipPath>
+<path style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(197,34,31); fill-rule: nonzero; opacity: 1;" vector-effect="non-scaling-stroke"  transform=" translate(-62, -57.99)" d="M 52 51 L 52 59 L 72 74 L 72 48 L 66.4 43.8 C 60.465 39.35 52 43.585 52 51 z" stroke-linecap="round" />
+</g>
+</svg>

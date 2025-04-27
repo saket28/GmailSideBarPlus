@@ -11,8 +11,8 @@ export function handlePanelClick(event) {
         const filterType = target.dataset.filterType;
 
         if (filterType === 'sender') {
-            const firstWord = target.dataset.firstWord;
-            if (firstWord) {
+            const sender = target.dataset.sender;
+            if (sender) {
                 const currentHash = window.location.hash;
                 let baseQuery = '-in:trash';
                 //let baseQuery = '';
@@ -45,7 +45,7 @@ export function handlePanelClick(event) {
                 //}
                 
                 // Combine base query with the new 'from:' filter, adding a space only if baseQuery is not empty
-                let newSearchTerm = `${baseQuery} from:(${firstWord})`;
+                let newSearchTerm = `${baseQuery} from:(${sender})`;
                 log(`Applying filter: "${newSearchTerm}"`);
 
                 // Manually replace spaces with '+' for Gmail's hash format
@@ -56,7 +56,7 @@ export function handlePanelClick(event) {
             }
         } else if (filterType === 'clear') {
             const currentHash = window.location.hash;
-            let baseQuery = '';
+            let baseQuery = '-in:trash';
             // Determine base query from current hash
             if (currentHash.startsWith('#search/')) {
                 baseQuery = decodeURIComponent(currentHash.substring(8)).replace(/\+from:\S+/i, '').trim(); // Remove existing 'from:' clause
@@ -100,9 +100,9 @@ export function updateActiveFilterHighlight() {
         const filterType = a.dataset.filterType;
 
         if (filterType === 'sender') {
-            const linkFirstWord = a.dataset.firstWord;
+            const linkSender = a.dataset.sender;
             // Highlight if a 'from:' filter exists in the URL and matches this link's sender
-            if (activeSenderFilter && linkFirstWord && linkFirstWord.toLowerCase() === activeSenderFilter.toLowerCase()) {
+            if (activeSenderFilter && linkSender && linkSender.toLowerCase() === activeSenderFilter.toLowerCase()) {
                 a.classList.add(config.ACTIVE_FILTER_CLASS);
                 activeSenderLinkFound = true; // Mark that a sender link is active
             }

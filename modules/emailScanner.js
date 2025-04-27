@@ -82,10 +82,10 @@ export function scanAndPopulateList() {
         emailRows.forEach(row => {
             const senderInfo = extractSenderFromRow(row);
             if (senderInfo && senderInfo.name) {
-                const firstWord = cleanName(senderInfo.name);
-                if (firstWord &&
-                    ![...uniqueSendersCache].some(existing => existing.toLowerCase() === firstWord.toLowerCase())) {
-                    uniqueSendersCache.add(firstWord);
+                const sender = cleanName(senderInfo.name);
+                if (sender &&
+                    ![...uniqueSendersCache].some(existing => existing.toLowerCase() === sender.toLowerCase())) {
+                    uniqueSendersCache.add(sender);
                 }
             }
         });
@@ -105,17 +105,17 @@ export function scanAndPopulateList() {
             .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }))
             .slice(0, config.MAX_SENDERS);
 
-        sortedSenders.forEach(firstWord => {
+        sortedSenders.forEach(sender => {
             const li = document.createElement('li');
             const link = document.createElement('a');
             link.href = "#";
-            link.textContent = firstWord;
-            link.dataset.firstWord = firstWord;
+            link.textContent = sender;
+            link.dataset.sender = sender;
             link.dataset.filterType = 'sender';
             li.appendChild(link);
             list.appendChild(li);
         });
     }
-    log(`Scan complete. Found ${uniqueSendersCache.size} unique sender first words (showing up to ${config.MAX_SENDERS}).`);
+    log(`Scan complete. Found ${uniqueSendersCache.size} unique senders (showing up to ${config.MAX_SENDERS}).`);
     updateActiveFilterHighlight(); // Update highlight after list is populated
 }

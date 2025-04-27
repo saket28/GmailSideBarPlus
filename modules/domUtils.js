@@ -31,7 +31,7 @@ export function createPanelElement() {
     const header = document.createElement('div');
     header.id = `${config.PANEL_ID}-header`;
     const title = document.createElement('h3');
-    title.textContent = 'Filter by Sender';
+    title.textContent = 'Direct Messages';
     header.appendChild(title);
     panel.appendChild(header);
 
