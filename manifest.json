@@ -1,8 +1,10 @@
 {
   "manifest_version": 3,
-  "name": "GMessanger",
+  "name": "GMessenger - Gmail Messenger Sender Sidebar",
   "version": "1.0.0",
-  "description": "Adds a sidebar to Gmail showing messanger style DMs (direct messages).",
+  "description": "Adds a messenger-like sidebar to Gmail that helps you filter emails by sender with just one click.",
+  "author": "GMessengerExt",
+  "homepage_url": "https://github.com/GMessengerExt/GMessenger-Feedback/discussions",   
   "permissions": ["storage"],
   "host_permissions": ["*://mail.google.com/*"],
   "content_scripts": [{
@@ -11,14 +13,21 @@
     "js": ["content.js"],
     "run_at": "document_idle"
   }],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
   "icons": {
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
   },
+  "action": {
+    "default_popup": "settings.html"
+  },
   "content_security_policy": {
     "extension_pages": "script-src 'self'; object-src 'self'"
   },
-  "minimum_chrome_version": "80",
+  "minimum_chrome_version": "88",
   "web_accessible_resources": [{
     "resources": [
       "modules/config.js",

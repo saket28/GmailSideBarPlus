@@ -17,5 +17,17 @@
         }
     }
 
+    // Add message listener for module communication
+    window.addEventListener('message', function(event) {
+        // Only accept messages from our window
+        if (event.source !== window) return;
+        
+        if (event.data.type === 'GSS_OPEN_SETTINGS') {
+            chrome.runtime.sendMessage({ action: 'openPopup' }).catch(error => {
+                console.log('GSS ⚠️ Settings popup action failed:', error);
+            });
+        }
+    });
+
     injectScript('modules/main.js');
 })();

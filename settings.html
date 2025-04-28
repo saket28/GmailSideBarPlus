@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GMessenger Settings</title>
+    <style>
+        body {
+            width: 300px;
+            padding: 16px;
+            font-family: 'Roboto', Arial, sans-serif;
+            color: #202124;
+            margin: 0;
+        }
+        h1 {
+            font-size: 18px;
+            margin-bottom: 16px;
+        }
+        .section-header {
+            font-size: 13px;
+            font-weight: 500;
+            text-transform: uppercase;
+            color: #5f6368;
+            margin-bottom: 12px;
+            letter-spacing: 0.8px;
+        }
+        .settings {
+            margin-bottom: 24px;
+        }
+        .setting-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding: 8px 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        .setting-label {
+            color: #202124;
+            font-size: 14px;
+        }
+        input[readonly] {
+            background-color: #fff;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            padding: 4px 8px;
+            color: #202124;
+            font-size: 14px;
+            width: 60px;
+            text-align: right;
+        }
+        .divider {
+            height: 1px;
+            background-color: #dadce0;
+            margin: 16px 0;
+        }
+        .links {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+        }
+        a {
+            flex: 1;
+            color: #1a73e8;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 8px;
+            border-radius: 8px;
+            font-size: 13px;
+            background-color: #f8f9fa;
+        }
+        a:hover {
+            background-color: #f1f3f4;
+        }
+        .icon {
+            width: 16px;
+            height: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>GMessenger</h1>
+    <div class="section-header">Configuration</div>
+    <div class="settings">
+        <div class="setting-row">
+            <span class="setting-label">Maximum senders</span>
+            <input type="number" readonly value="25" id="max-senders">
+        </div>
+    </div>
+    <div class="divider"></div>
+    <div class="links">
+        <a href="https://github.com/GMessengerExt/GMessenger-Feedback/discussions/new?category=bugs" target="_blank">
+            <svg class="icon" viewBox="0 0 24 24">
+                <path fill="currentColor" d="M20 8h-2.81c-.45-.78-1.07-1.45-1.82-1.96L17 4.41 15.59 3l-2.17 2.17C12.96 5.06 12.49 5 12 5c-.49 0-.96.06-1.41.17L8.41 3 7 4.41l1.62 1.63C7.88 6.55 7.26 7.22 6.81 8H4v2h2.09c-.05.33-.09.66-.09 1v1H4v2h2v1c0 .34.04.67.09 1H4v2h2.81c1.04 1.79 2.97 3 5.19 3s4.15-1.21 5.19-3H20v-2h-2.09c.05-.33.09-.66.09-1v-1h2v-2h-2v-1c0-.34-.04-.67-.09-1H20V8zm-6 8h-4v-2h4v2zm0-4h-4v-2h4v2z"/>
+            </svg>
+            Report a Bug
+        </a>
+        <a href="https://github.com/GMessengerExt/GMessenger-Feedback/discussions/new?category=ideas" target="_blank">
+            <svg class="icon" viewBox="0 0 24 24">
+                <path fill="currentColor" d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7zm2.85 11.1l-.85.6V16h-4v-2.3l-.85-.6A4.997 4.997 0 0 1 7 9c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.63-.8 3.16-2.15 4.1z"/>
+            </svg>
+            Share Ideas
+        </a>
+    </div>
+</body>
+</html>

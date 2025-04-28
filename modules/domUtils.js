@@ -27,12 +27,35 @@ export function createPanelElement() {
     const panel = document.createElement('div');
     panel.id = config.PANEL_ID;
 
-    // Header
+    // Header with settings button
     const header = document.createElement('div');
     header.id = `${config.PANEL_ID}-header`;
     const title = document.createElement('h3');
-    title.textContent = 'Direct Messages';
+    title.textContent = 'GMessenger';
+
+    // Create settings button with SVG using DOM methods
+    const settingsBtn = document.createElement('button');
+    settingsBtn.id = `${config.PANEL_ID}-settings`;
+    settingsBtn.title = 'Open Settings';
+    
+    // Create SVG element
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('viewBox', '0 0 24 24');
+    
+    // Create path element
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', 'M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z');
+    
+    // Append elements
+    svg.appendChild(path);
+    settingsBtn.appendChild(svg);
+    
+    settingsBtn.addEventListener('click', () => {
+        window.postMessage({ type: 'GSS_OPEN_SETTINGS' }, '*');
+    });
+    
     header.appendChild(title);
+    header.appendChild(settingsBtn);
     panel.appendChild(header);
 
     // List Container (same as before)
@@ -73,8 +96,8 @@ export function injectPanel() {
     if (parentContainer && referenceNode) {
         log("Found container and reference node, injecting panel...");
         const panelElement = createPanelElement();
-        parentContainer.insertBefore(panelElement, referenceNode);
-        detectAndApplyTheme();
+        parentContainer.insertBefore(panelElement, referenceNode);       
+        setTimeout(() => detectAndApplyTheme(), 500);        
         log("Panel structure injected.");
         return true;
     } else {

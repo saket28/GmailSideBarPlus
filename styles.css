@@ -93,6 +93,28 @@
     font-style: italic; font-size: 13px;
 }
 
+/* Settings Button */
+#sender-panel-settings {
+    padding: 8px;
+    margin-right: -4px;
+    cursor: pointer;
+    border: none;
+    background: none;
+    border-radius: 50%;
+    color: var(--on-surface-variant, #5f6368);
+    transition: background-color var(--transition-timing);
+}
+
+#sender-panel-settings:hover {
+    background-color: var(--hover-on-surface, rgba(60, 64, 67, 0.08));
+}
+
+#sender-panel-settings svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+}
+
 /* --- Dark Mode Overrides --- */
 /* These are examples, inspect Gmail's dark mode for exact variables/colors */
 #sender-panel.dark-theme {
@@ -113,6 +135,9 @@
     color: #eee;
 }
 #sender-panel.dark-theme #sender-panel-list .placeholder {
+    color: var(--on-surface-variant-dark, #9aa0a6);
+}
+#sender-panel.dark-theme #sender-panel-settings {
     color: var(--on-surface-variant-dark, #9aa0a6);
 }
 /* --- End Dark Mode --- */
