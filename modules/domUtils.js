@@ -1,13 +1,13 @@
 import * as config from './config.js';
 import { handlePanelClick } from './eventHandlers.js'; // Import needed handlers
 import { state } from './state.js';
+import { log } from './utils.js';
 
 /** Detects Gmail theme and applies class to panel */
 export function detectAndApplyTheme() {
     if (state.themeApplied) return; // Only run once
     const panel = document.getElementById(config.PANEL_ID);
     if (!panel) return;
-    //const isDarkMode = document.body.classList.contains(config.GMAIL_DARK_MODE_INDICATOR);
     const el = document.querySelector('.aim a');
     if (!el) return; // Element not found
     const elColor = getComputedStyle(el).color;
@@ -19,20 +19,43 @@ export function detectAndApplyTheme() {
         panel.classList.remove(config.DARK_THEME_CLASS);
     }
     state.themeApplied = true;
-    // console.log(`Gmail Sender Filter Sidebar: Theme set to ${isDarkMode ? 'Dark' : 'Light'}`);
+    log(`Theme set to ${isDarkMode ? 'Dark' : 'Light'}`);
 }
 
-/** Creates the panel structure (HTML), including the refresh button. */
+/** Creates the panel structure (HTML). */
 export function createPanelElement() {
     const panel = document.createElement('div');
     panel.id = config.PANEL_ID;
 
-    // Header (Title + Refresh + Toggle)
+    // Header with settings button
     const header = document.createElement('div');
     header.id = `${config.PANEL_ID}-header`;
     const title = document.createElement('h3');
-    title.textContent = 'Filter by Sender';
+    title.textContent = 'GMessenger';
+
+    // Create settings button with SVG using DOM methods
+    const settingsBtn = document.createElement('button');
+    settingsBtn.id = `${config.PANEL_ID}-settings`;
+    settingsBtn.title = 'Open Settings';
+    
+    // Create SVG element
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('viewBox', '0 0 24 24');
+    
+    // Create path element
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', 'M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z');
+    
+    // Append elements
+    svg.appendChild(path);
+    settingsBtn.appendChild(svg);
+    
+    settingsBtn.addEventListener('click', () => {
+        window.postMessage({ type: 'GSS_OPEN_SETTINGS' }, '*');
+    });
+    
     header.appendChild(title);
+    header.appendChild(settingsBtn);
     panel.appendChild(header);
 
     // List Container (same as before)
@@ -71,14 +94,14 @@ export function injectPanel() {
     const referenceNode = parentContainer ? parentContainer.querySelector(config.INJECTION_REFERENCE_NODE_SELECTOR) : null;
 
     if (parentContainer && referenceNode) {
-         console.log("Gmail Sender Filter Sidebar: Found container and reference node, injecting panel...");
-         const panelElement = createPanelElement();
-         parentContainer.insertBefore(panelElement, referenceNode);
-         setTimeout(detectAndApplyTheme(), 100);
-         console.log("Gmail Sender Filter Sidebar: Panel structure injected.");
-         return true;
+        log("Found container and reference node, injecting panel...");
+        const panelElement = createPanelElement();
+        parentContainer.insertBefore(panelElement, referenceNode);       
+        setTimeout(() => detectAndApplyTheme(), 500);        
+        log("Panel structure injected.");
+        return true;
     } else {
-        console.log(`Gmail Sender Filter Sidebar: Could not find suitable injection point. Parent: ${parentContainer ? 'Found' : 'null'}, Reference: ${referenceNode ? 'Found' : 'null'}. Check INJECTION selectors.`);
+        log(`Could not find suitable injection point. Parent: ${parentContainer ? 'Found' : 'null'}, Reference: ${referenceNode ? 'Found' : 'null'}. Check INJECTION selectors.`, 'warn');
         return false;
     }
 }

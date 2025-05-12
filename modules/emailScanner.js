@@ -1,7 +1,8 @@
 import * as config from './config.js';
 import { updateActiveFilterHighlight } from './eventHandlers.js'; // Will be created next
+import { log } from './utils.js';
 
-// --- Use a Set to store unique first words directly ---
+// Use a Set to store unique senders
 let uniqueSendersCache = new Set();
 
 /** Extracts sender name and email from a single email row element. */
@@ -29,29 +30,30 @@ export function extractSenderFromRow(rowElement) {
         name = name.replace(/\s+/g, ' ').trim();
         if (!name) name = email || "Unknown Sender";
         if (name !== "Unknown Sender") {
-             // Return full name, we extract first word later
              return { name: name, email: email ? email.toLowerCase() : null };
         }
     }
     return null;
 }
 
-function cleanName(name) {
+export function cleanName(name) {
+    if (!name || typeof name !== 'string') return '';
     return name
-      .replace(/\b\w+\.(?=\s|$)/g, '')           // Remove words ending in a period
-      .replace(/\s*[-–—]\s*$/, '')               // Remove trailing dash/hyphen
-      .split(/(?<=\w)[\.\(@]+/)[0]               // Split only after a word and before . ( @ or (
-      .trim();
-  }  
+        .replace(/[\p{L}\w]+\.(?=\s*$)/u, '')      // Remove words ending in a period
+        .replace(/[\s]*[^\p{L}\w]+$/u, '')         // Remove trailing special chars
+        .replace(/\s*\(.*$/, '')                   // Remove everything from first parenthesis
+        .replace(/(?!^)[\s]*[|@].*$/, '')          // Split on | or @ only if not at start
+        .trim();
+}
 
-/** Scans currently visible emails, extracts unique first words, populates the panel list. */
+/** Scans currently visible emails, extracts unique senders, populates the panel list. */
 export function scanAndPopulateList() {
-    console.log("Gmail Sender Filter Sidebar: Scanning emails and populating list...");
+    log("Scanning emails and populating list...");
 
     const panel = document.getElementById(config.PANEL_ID);
     const list = document.getElementById(`${config.PANEL_ID}-list`);
     if (!panel || !list) {
-        console.error("Panel or list element not found during scan.");
+        log("Panel or list element not found during scan.", "error");
         return;
     }
 
@@ -67,8 +69,8 @@ export function scanAndPopulateList() {
 
 
     const emailContainers = document.querySelectorAll(config.EMAIL_CONTAINER_SELECTOR);
-    if (!emailContainers || emailContainers.length === 0) {
-        console.warn("Email container not found for scanning.");
+    if (!emailContainers || !emailContainers.length === 0) {
+        log("Email container not found for scanning.", "warn");
         placeholderLi.textContent = 'Error: Email list not found.';
         return;
     }
@@ -80,10 +82,10 @@ export function scanAndPopulateList() {
         emailRows.forEach(row => {
             const senderInfo = extractSenderFromRow(row);
             if (senderInfo && senderInfo.name) {
-                const firstWord = cleanName(senderInfo.name);
-                if (firstWord &&
-                    ![...uniqueSendersCache].some(existing => existing.toLowerCase() === firstWord.toLowerCase())) {
-                    uniqueSendersCache.add(firstWord);
+                const sender = cleanName(senderInfo.name);
+                if (sender &&
+                    ![...uniqueSendersCache].some(existing => existing.toLowerCase() === sender.toLowerCase())) {
+                    uniqueSendersCache.add(sender);
                 }
             }
         });
@@ -99,21 +101,21 @@ export function scanAndPopulateList() {
         noSendersLi.textContent = 'No senders found in view.';
         list.appendChild(noSendersLi);
     } else {
-        const sortedSenders = Array.from(uniqueSendersCache).sort((a, b) => {
-            return a.localeCompare(b, undefined, { sensitivity: 'base' });
-        });
+        const sortedSenders = Array.from(uniqueSendersCache)
+            .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }))
+            .slice(0, config.MAX_SENDERS);
 
-        sortedSenders.forEach(firstWord => {
+        sortedSenders.forEach(sender => {
             const li = document.createElement('li');
             const link = document.createElement('a');
             link.href = "#";
-            link.textContent = firstWord;
-            link.dataset.firstWord = firstWord;
+            link.textContent = sender;
+            link.dataset.sender = sender;
             link.dataset.filterType = 'sender';
             li.appendChild(link);
             list.appendChild(li);
         });
     }
-    console.log(`Gmail Sender Filter Sidebar: Scan complete. Found ${uniqueSendersCache.size} unique sender first words.`);
+    log(`Scan complete. Found ${uniqueSendersCache.size} unique senders (showing up to ${config.MAX_SENDERS}).`);
     updateActiveFilterHighlight(); // Update highlight after list is populated
 }

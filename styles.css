@@ -42,7 +42,7 @@
 }
 
 /* Panel Container - Light Mode Defaults */
-#dynamic-sender-filter-panel {
+#sender-panel {
     position: relative; width: var(--panel-width);
     height: calc(100vh - 64px); /* Adjust based on header */
     background-color: var(--surface, #f5f5f5);
@@ -53,12 +53,12 @@
 }
 
 /* Panel Header */
-#dynamic-sender-filter-panel-header {
+#sender-panel-header {
     display: flex; align-items: center; /* justify-content: space-between; */ /* Removed for button grouping */
     padding: 12px 8px 12px 16px; 
     flex-shrink: 0;
 }
-#dynamic-sender-filter-panel-header h3 {
+#sender-panel-header h3 {
     margin: 0; font-size: 16px; font-weight: 500;
     color: var(--on-surface-variant, #3c4043);
     white-space: nowrap; overflow: hidden;
@@ -67,52 +67,77 @@
 }
 
 /* Panel List Area */
-#dynamic-sender-filter-panel-list-container {
+#sender-panel-list-container {
     overflow-y: auto; overflow-x: hidden; flex-grow: 1; padding: 8px 0;
 }
-#dynamic-sender-filter-panel-list { list-style: none; padding: 0; margin: 0; }
-#dynamic-sender-filter-panel-list li { margin: 0; }
-#dynamic-sender-filter-panel-list li a {
+#sender-panel-list { list-style: none; padding: 0; margin: 0; }
+#sender-panel-list li { margin: 0; }
+#sender-panel-list li a {
     display: flex; align-items: center; padding: 6px 16px 6px 16px;
     text-decoration: none; color: var(--on-surface, #202124);
     border-radius: 0 16px 16px 0; margin-right: 8px; font-size: 14px;
     cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     border: none; background: none;
 }
-#dynamic-sender-filter-panel-list li a:hover {
+#sender-panel-list li a:hover {
     background-color: var(--hover-on-surface, rgba(60, 64, 67, 0.08));
 }
-#dynamic-sender-filter-panel-list li a.sender-filter-active {
+#sender-panel-list li a.sender-filter-active {
     background-color: var(--secondary-container, #d3e3fd);
     color: var(--on-secondary-container, #0b57d0);
     font-weight: 500;
 }
-#dynamic-sender-filter-panel-list .clear-filter a { font-weight: 500; }
-#dynamic-sender-filter-panel-list .placeholder {
+#sender-panel-list .clear-filter a { font-weight: 500; }
+#sender-panel-list .placeholder {
     padding: 8px 16px 8px 16px; color: var(--on-surface-variant, #5f6368);
     font-style: italic; font-size: 13px;
 }
 
+/* Settings Button */
+#sender-panel-settings {
+    padding: 8px;
+    margin-right: -4px;
+    cursor: pointer;
+    border: none;
+    background: none;
+    border-radius: 50%;
+    color: var(--on-surface-variant, #5f6368);
+    transition: background-color var(--transition-timing);
+}
+
+#sender-panel-settings:hover {
+    background-color: var(--hover-on-surface, rgba(60, 64, 67, 0.08));
+}
+
+#sender-panel-settings svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+}
+
 /* --- Dark Mode Overrides --- */
 /* These are examples, inspect Gmail's dark mode for exact variables/colors */
-#dynamic-sender-filter-panel.dark-theme {
+#sender-panel.dark-theme {
     background-color: #111;
     border-left-color: #333;
 }
-#dynamic-sender-filter-panel.dark-theme #dynamic-sender-filter-panel-header h3 {
+#sender-panel.dark-theme #sender-panel-header h3 {
     color: var(--on-surface-variant-dark, #bdc1c6);
 }
-#dynamic-sender-filter-panel.dark-theme #dynamic-sender-filter-panel-list li a {
+#sender-panel.dark-theme #sender-panel-list li a {
     color: var(--on-surface-dark, #e8eaed);
 }
-#dynamic-sender-filter-panel.dark-theme #dynamic-sender-filter-panel-list li a:hover {
+#sender-panel.dark-theme #sender-panel-list li a:hover {
     background-color: var(--hover-on-surface-dark, #333);
 }
-#dynamic-sender-filter-panel.dark-theme #dynamic-sender-filter-panel-list li a.sender-filter-active {
+#sender-panel.dark-theme #sender-panel-list li a.sender-filter-active {
     background-color: #444;
     color: #eee;
 }
-#dynamic-sender-filter-panel.dark-theme #dynamic-sender-filter-panel-list .placeholder {
+#sender-panel.dark-theme #sender-panel-list .placeholder {
+    color: var(--on-surface-variant-dark, #9aa0a6);
+}
+#sender-panel.dark-theme #sender-panel-settings {
     color: var(--on-surface-variant-dark, #9aa0a6);
 }
 /* --- End Dark Mode --- */
